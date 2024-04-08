@@ -10,10 +10,10 @@ namespace NumberOfRequestsFromIP
 {
     internal class AppConfig
     {
-        [Option("file-log", Required = false, HelpText = "Path to the log file. Environment variable 'LOG_FILE_PATH'")]
+        [Option("file-log", Required = false, HelpText = "Path to the log file. Environment variable 'FILE_LOG'")]
         public string? LogFilePath { get; private set; }
 
-        [Option("file-output", Required = false, HelpText = "Path to the output file. Environment variable 'OUTPUT_FILE_PATH'")]
+        [Option("file-output", Required = false, HelpText = "Path to the output file. Environment variable 'FILE_OUTPUT'")]
         public string? OutputFilePath { get; private set; }
 
         [Option("address-start", Required = false, HelpText = "Lower bound of the IP address range. Environment variable 'ADDRESS_START'")]
@@ -33,8 +33,8 @@ namespace NumberOfRequestsFromIP
         public void Validate()
         {
             //проверяем обязательные параметры на null
-            RequireNotNull(LogFilePath, "--file-log", "LOG_FILE_PATH");
-            RequireNotNull(OutputFilePath, "--file-output", "OUTPUT_FILE_PATH");
+            RequireNotNull(LogFilePath, "--file-log", "FILE_LOG");
+            RequireNotNull(OutputFilePath, "--file-output", "FILE_OUTPUT");
             RequireNotNull(TimeStart, "--time-start", "TIME_START");
             RequireNotNull(TimeEnd, "--time-end", "TIME_END");
 
@@ -96,11 +96,11 @@ namespace NumberOfRequestsFromIP
         public void GetEnvVar()
         {
             if (LogFilePath == null) {
-                LogFilePath = Environment.GetEnvironmentVariable("LOG_FILE_PATH");
+                LogFilePath = Environment.GetEnvironmentVariable("FILE_LOG");
             }
 
             if (OutputFilePath == null) {
-                OutputFilePath = Environment.GetEnvironmentVariable("OUTPUT_FILE_PATH");
+                OutputFilePath = Environment.GetEnvironmentVariable("FILE_OUTPUT");
             }
 
             if (AddressStart == null) {
