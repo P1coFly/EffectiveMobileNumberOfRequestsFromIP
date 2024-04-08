@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace NumberOfRequestsFromIP
 {
+    //получение входных данных
     internal interface IDataProvider
     {
         string[] GetData(string logFilePath);

@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace NumberOfRequestsFromIP
 {
+    //Реализовывает интерфейс ICounterIP. Считает кол-во IP в словарь
     public class CounterIP: ICounterIP
     {
-        public Dictionary<string, int> CountIP(string[] data, string? addressStart, string? addressMask, string timeStart, string timeEnd)
+        /* Т.к. не гарантируется, что данные в журнале доступа отсортированы
+         * Проходим за линию O(N) все строки и проверяем на соответсвие заданным ограничениям. 
+         * Результат записываем в словарь
+         */
+        public Dictionary<string, int> CountIP(string[] data, string addressStart, string addressMask, string timeStart, string timeEnd)
         {
-            // Присваиваем значения по умолчанию, если addressStart или addressMask равны null
-            if (addressStart == null)
-                addressStart = "0.0.0.0";
-
-            if (addressMask == null)
-                addressMask = "0.0.0.0";
 
             // Создаем словарь для хранения количества обращений к каждому IP-адресу
             Dictionary<string, int> ipCounts = new Dictionary<string, int>();
@@ -55,7 +54,7 @@ namespace NumberOfRequestsFromIP
             if (addressMask == "0.0.0.0")
                 return true;
 
-            // Разбиваем IP-адрес и маску на отдельные части
+            // Разбиваем IP-адреса и маску на отдельные части
             byte[] ipBytes = ipAddress.Split('.').Select(byte.Parse).ToArray();
             byte[] startBytes = addressStart.Split('.').Select(byte.Parse).ToArray();
             byte[] maskBytes = addressMask.Split('.').Select(byte.Parse).ToArray();

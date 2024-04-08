@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace NumberOfRequestsFromIP
 {
+    //Реализовывает интерфейс IDataProvider. Считывает данные из файла
     internal class DataProviderFromFile: IDataProvider
     {
         public string[] GetData(string logFilePath)

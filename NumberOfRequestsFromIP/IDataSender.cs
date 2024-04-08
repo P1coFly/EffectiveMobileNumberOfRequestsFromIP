@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace NumberOfRequestsFromIP
 {
+    //Отправка\сохранение результата
     internal interface IDataSender
     {
         void SendData(Dictionary<string, int> data, string outputFilePath);

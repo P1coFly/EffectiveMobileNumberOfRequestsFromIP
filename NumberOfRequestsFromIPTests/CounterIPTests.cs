@@ -41,8 +41,8 @@ namespace NumberOfRequestsFromIP.Tests
             // Arrange
             CounterIP counterIP = new CounterIP();
             string[] data = { "192.168.1.1:2024-04-01 10:00:00", "192.168.1.2:2024-04-01 10:00:00" };
-            string? addressStart = null;
-            string? addressMask = null;
+            string? addressStart = "0.0.0.0";
+            string? addressMask = "0.0.0.0";
             string timeStart = "01.04.2024";
             string timeEnd = "01.04.2024";
 
@@ -125,7 +125,7 @@ namespace NumberOfRequestsFromIP.Tests
             CounterIP counterIP = new CounterIP();
             string[] data = { "192.168.1.1:2024-04-01 10:00:00", "192.168.1.1:2024-04-01 11:00:00" };
             string addressStart = "0.0.0.0";
-            string? addressMask = null;
+            string? addressMask = "0.0.0.0";
             string timeStart = "01.04.2024";
             string timeEnd = "01.04.2024";
 

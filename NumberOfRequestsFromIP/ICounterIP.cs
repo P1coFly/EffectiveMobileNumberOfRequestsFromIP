@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace NumberOfRequestsFromIP
 {
+    //подсчёт кол-во ip-адресов
     internal interface ICounterIP
     {
-        Dictionary<string, int> CountIP(string[] data, string? AddressStart, string? AddressMask, string TimeStart, string TimeEnd );
+        Dictionary<string, int> CountIP(string[] data, string AddressStart, string AddressMask, string TimeStart, string TimeEnd );
     }
 }

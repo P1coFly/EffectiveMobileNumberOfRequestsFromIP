@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace NumberOfRequestsFromIP
 {
+    //Реализовывает интерфейс IDataSender. Записывает словарь в файл
     internal class DataSenderToFile:IDataSender
     {
         public void SendData(Dictionary<string, int> data, string outputFilePath)
         {
-            using (StreamWriter writer = new StreamWriter(outputFilePath))
+            using (StreamWriter writer = new StreamWriter(outputFilePath,false))
             {
                 // Проходим по всем записям в словаре и записываем их в файл
                 foreach (var entry in data)
