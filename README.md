@@ -28,11 +28,11 @@
 ## Запуск программы
 Помимо передачи параметров через параметры командной строки, реализовано передача параметров через переменные окружения. Ниже представлено сопостановление параметров командной строки с переменными окружения
 
---file-log — FILE_LOG __
---file-output — FILE_OUTPUT __
---address-start —  ADDRESS_START __
---address-mask — ADDRESS_MASK __
---time-start —  TIME_START __
---time-end — TIME_END __
+--file-log — FILE_LOG <br />
+--file-output — FILE_OUTPUT <br />
+--address-start —  ADDRESS_START <br />_
+--address-mask — ADDRESS_MASK <br />
+--time-start —  TIME_START <br />
+--time-end — TIME_END <br />
 
 Для получение дополнительной информации, необходимо запустить приложение с флагом --help
