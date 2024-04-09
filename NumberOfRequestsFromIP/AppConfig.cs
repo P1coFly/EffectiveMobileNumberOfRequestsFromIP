@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -16,10 +17,10 @@ namespace NumberOfRequestsFromIP
         [Option("file-output", Required = false, HelpText = "Path to the output file. Environment variable 'FILE_OUTPUT'")]
         public string? OutputFilePath { get; private set; }
 
-        [Option("address-start", Required = false, HelpText = "Lower bound of the IP address range. Environment variable 'ADDRESS_START'")]
+        [Option("address-start", Required = false, HelpText = "Lower bound of the IP address range. parameter must be a valid IPv4. Environment variable 'ADDRESS_START'")]
         public string? AddressStart { get; private set; }
 
-        [Option("address-mask", Required = false, HelpText = "Subnet mask specifying the upper bound of the IP address range." +
+        [Option("address-mask", Required = false, HelpText = "Subnet mask specifying the upper bound of the IP address range. Parameter must be a valid address mask IPv4 or prefix address.." +
             " The --address-mask parameter cannot be used without --address-start parameter. Environment variable 'ADDRESS_MASK'")]
         public string? AddressMask { get; private set; } 
          
@@ -54,7 +55,7 @@ namespace NumberOfRequestsFromIP
 
             //проверяем на соответсвие IPv4
             IsIPv4(AddressStart, "--address-start");
-            IsIPv4(AddressMask, "--address-mask");
+            AddressMaskValidate();
 
             // Проверка формата даты для параметров time-start и time-end
             DateTime tempDateTime;
@@ -91,6 +92,99 @@ namespace NumberOfRequestsFromIP
             throw new ArgumentException($"The {paramName} parameter must be a valid IPv4 address. Use --help for more information.");
 
         }
+
+        private void AddressMaskValidate()
+        {
+            // Проверяем, является ли входной параметр префиксом
+            if (int.TryParse(AddressMask, out int prefixLength))
+            {
+                if (prefixLength < 0 || prefixLength > 32)
+                {
+                    throw new ArgumentException("Prefix length must be in the range of 0 to 32.");
+                }
+
+                // Преобразуем префикс в маску подсети
+                uint mask = 0;
+                if (prefixLength != 0)
+                {
+                    mask = uint.MaxValue << (32 - prefixLength);
+                }
+
+                byte[] bytes = new byte[4];
+                bytes[0] = (byte)(mask >> 24);
+                bytes[1] = (byte)(mask >> 16);
+                bytes[2] = (byte)(mask >> 8);
+                bytes[3] = (byte)(mask);
+
+                // Преобразуем маску в строковое представление
+                AddressMask = "";
+                for (int i = 0; i < 4; i++)
+                {
+                    int tmp = (int)bytes[i];
+                    if (i == 3){
+                        AddressMask += tmp.ToString();
+                        break;
+                    }
+                    AddressMask += tmp.ToString() + ".";
+                }
+                
+                byte[] ipBytes = AddressMask.Split('.').Select(byte.Parse).ToArray();
+            }
+            else
+            {
+                // Если входной параметр не является префиксом, проверяем его как IP-адрес
+                IsIPv4(AddressMask, "--address-mask");
+
+                // Проверяем валидна ли маска
+                string[] octets = AddressMask.Split('.');
+
+                uint[] maskOctets = new uint[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    if (!uint.TryParse(octets[i], out maskOctets[i]))
+                    {
+                        throw new ArgumentException($"The --address-mask parameter must be a valid address mask IPv4 or prefix address.. Use --help for more information.");
+                    }
+                }
+
+                // получаем маску
+                uint mask = 0;
+                for (int i=0; i<4; i++)
+                {
+                    mask = mask << 8;
+                    mask += maskOctets[i];
+                }
+
+                // если маска = 0, то выходим
+                if (mask == 0)
+                {
+                    return;
+                }
+
+                //идём по битам, ищем нулевой бит и генерируем эталонную маску
+                int count = 0;
+                var tmp = mask;
+                for (uint j = 0; j < 1U<<31; j++)
+                {
+                    
+                    if ( (tmp & (0b1U<<31)) == 0){  
+                        break;
+                    }
+                    count++;
+                    tmp = tmp << 1;
+                }
+
+
+                // проверяем с эталоном
+                if (mask != uint.MaxValue << (32 - count))
+                {
+                    throw new ArgumentException($"The --address-mask parameter must be a valid address mask IPv4 or prefix address. Use --help for more information.");
+                }
+
+
+            }
+        }
+
 
         //Считываем переменные среды
         public void GetEnvVar()

@@ -10,16 +10,26 @@ namespace NumberOfRequestsFromIP
             DataProviderFromFile dataProvider = new DataProviderFromFile();
             DataSenderToFile dataSender = new DataSenderToFile();
             CounterIP counterIP = new CounterIP();
+            try
+            {
+                //Парсим параметры командной строки в экземпляр класса AppConfig
+                CommandLine.Parser.Default.ParseArguments<AppConfig>(args)
+                    .WithParsed(config =>
+                    {
+                        config.GetEnvVar();
+                        config.Validate();
 
-            //Парсим параметры командной строки в экземпляр класса AppConfig
-            CommandLine.Parser.Default.ParseArguments<AppConfig>(args)
-                .WithParsed(config =>
-                {
-                    config.GetEnvVar();
-                    config.Validate();
+                        CalculateNumberOfIPRequests(config, dataProvider, counterIP, dataSender);
 
-                    CalculateNumberOfIPRequests(config,dataProvider,counterIP,dataSender);
-                });
+                        Console.WriteLine($"Success - File was created: {config.OutputFilePath}");
+                    });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+           
         }
 
         /* На вход подаётся конфиг, объект реализующий интерфейс IDataProvider (Получение ip-адресов),
