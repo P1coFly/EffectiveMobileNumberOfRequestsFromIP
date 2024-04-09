@@ -38,4 +38,4 @@
 Для получение дополнительной информации, необходимо запустить приложение с флагом --help
 
 ### Команда для запуска
-`NumberOfRequestsFromIP.exe --file-log <path_to_log.txt> --file-output <path_to_res.txt> --time-start <time_start> --time-end <time_end> --address-start <address_start_ipv4> --address-mask <address_mask_ipv4_or_prefix>`
+`NumberOfRequestsFromIP.exe --file-log <path_to_log.txt> --file-output <path_to_res.txt> --time-start <time_start_dd.MM.yyyy> --time-end <time_end_dd.MM.yyyy> --address-start <address_start_ipv4> --address-mask <address_mask_ipv4_or_prefix>`
